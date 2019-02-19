@@ -48,12 +48,20 @@ void seq_count_sort(int a[], int size, int max) {
     temp[i]+=temp[i-1];
   }
 
-  for (int i = 0; i<size; i++) {
+  /*for (int i = 0; i<size; i++) {
     sorted[temp[a[i]]-1] = a[i];
     temp[a[i]]--;
+  }*/
+  int prev = 0;
+  for (int j = 0; j<max+1; j++) {
+    for (int k = 0; k<temp[j]-prev; k++) {
+      a[temp[j]-k-1] = j;
+    }
+    prev = temp[j];
   }
 
-  copy_array(sorted, a, size);
+
+  //copy_array(sorted, a, size);
 
   delete[] temp;
   delete[] sorted;
@@ -84,29 +92,18 @@ void par_count_sort(int a[], int size, int max) {
     } else {
       start = num_extra*(length+1)+(thread_id-num_extra)*length;
     }
-    //printf("%d: (%d, %d)\n", omp_get_thread_num(), start, start+length);
 
     int prev = 0;
     if (start > 0) {
       prev = temp[start-1];
     }
-    //printf("thread %d,  prev: %d\n", omp_get_thread_num(), prev);
     for (int j = start; j<start+length; j++) {
-      //printf("thread %d, temp[%d]: %d, %d\n", omp_get_thread_num(), j, temp[j], prev);
       for (int k = 0; k<temp[j]-prev; k++) {
-        //printf("thread %d, k: %d\n", omp_get_thread_num(), k);
         a[temp[j]-k-1] = j;
       }
       prev = temp[j];
     }
   }
-
-  /*for (int i = 0; i<size; i++) {
-    sorted[temp[a[i]]-1] = a[i];
-    temp[a[i]]--;
-  }*/
-
-  //copy_array(sorted, a, size);
 
   delete[] temp;
   delete[] sorted;
