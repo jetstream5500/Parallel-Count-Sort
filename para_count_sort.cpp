@@ -9,8 +9,7 @@
 #include <fstream> /*fout*/
 #include <omp.h> /*omp*/
 
-static int MAX = 399999;
-static int NUM_THREADS = 8;
+static int MAX = 100000;
 
 void print_array(int a[], int size, const char * tag = "") {
   for (int i = 0; i<size; i++) {
@@ -38,7 +37,6 @@ void generate_random_nums(int a[], int size, int max) {
 
 void seq_count_sort(int a[], int size, int max) {
   int * temp = new int[max+1]();
-  int * sorted = new int[size]();
 
   for (int i = 0; i<size; i++) {
     temp[a[i]]++;
@@ -48,10 +46,6 @@ void seq_count_sort(int a[], int size, int max) {
     temp[i]+=temp[i-1];
   }
 
-  /*for (int i = 0; i<size; i++) {
-    sorted[temp[a[i]]-1] = a[i];
-    temp[a[i]]--;
-  }*/
   int prev = 0;
   for (int j = 0; j<max+1; j++) {
     for (int k = 0; k<temp[j]-prev; k++) {
@@ -60,16 +54,11 @@ void seq_count_sort(int a[], int size, int max) {
     prev = temp[j];
   }
 
-
-  //copy_array(sorted, a, size);
-
   delete[] temp;
-  delete[] sorted;
 }
 
 void par_count_sort(int a[], int size, int max) {
   int * temp = new int[max+1]();
-  int * sorted = new int[size]();
 
   #pragma omp parallel for reduction(+:temp[:max+1])
   for (int i = 0; i<size; i++) {
@@ -106,7 +95,6 @@ void par_count_sort(int a[], int size, int max) {
   }
 
   delete[] temp;
-  delete[] sorted;
 }
 
 int main(int argc, char **argv) {
