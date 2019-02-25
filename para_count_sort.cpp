@@ -9,7 +9,7 @@
 #include <fstream> /*fout*/
 #include <omp.h> /*omp*/
 
-static int MAX = 100000;
+static int MAX = 300000;
 
 void print_array(int a[], int size, const char * tag = "") {
   for (int i = 0; i<size; i++) {
